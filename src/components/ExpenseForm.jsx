@@ -10,8 +10,29 @@ export default function ExpenseForm({setExpenses}) {
         category: "",
         amount: "",
     })
+
+    const [errors, setErrors] = useState({})
+
+    const validate = (formData) =>{
+        const errorsData = {}
+        if(!formData.title){
+            errorsData.title = "Title is required"
+        }
+        if(!formData.category){
+            errorsData.category = "Category is required"
+        }
+        if(!formData.amount){
+            errorsData.amount = "Amount is required"
+        }
+        setErrors(errorsData)
+        return errorsData;
+    }
+
     const handleSubmit = (event) =>{
         event.preventDefault()
+        const validateResult = validate(expense)
+
+        if(Object.keys(validateResult).length) return
         setExpenses((prevState) => [...prevState, {...expense, id: crypto.randomUUID()}])
        setExpense({
         title: "",
@@ -25,6 +46,7 @@ export default function ExpenseForm({setExpenses}) {
         setExpense((prevState) => ({
             ...prevState, [name]: value
         }))
+        setErrors({})
     }
 
   return (
@@ -32,6 +54,7 @@ export default function ExpenseForm({setExpenses}) {
           <div className="input-container">
             <label htmlFor="title">Title</label>
             <input id="title" name="title"  value={expense.title} onChange={handleChange}/>
+            <p className="error">{errors.title}</p>
           </div>
           <div className="input-container">
             <label htmlFor="category">Category</label>
@@ -43,10 +66,12 @@ export default function ExpenseForm({setExpenses}) {
                   <option value="education">Education</option>
                   <option value="medicine">Medicine</option>
                 </select>
+            <p className="error">{errors.category}</p>                
           </div>
           <div className="input-container">
             <label htmlFor="amount">Amount</label>
             <input id="amount" name="amount" value={expense.amount} onChange={handleChange}/>
+            <p className="error">{errors.amount}</p>    
           </div>
           <button className="add-btn">Add</button>
         </form>
