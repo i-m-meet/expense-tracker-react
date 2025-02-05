@@ -17,7 +17,7 @@ export default function ExpenseForm({ setExpenses }) {
   const validationConfig = {
     title: [{required: true, message: "Please enter the valid title"}, {minLength: 3, message: "title must have atleast 3 characters"}],
     category: [{required: true, message: "Please enter the valid category"}],
-    amount: [{required: true, message: "Please enter the valid amount"}],
+    amount: [{required: true, message: "Please enter the valid amount"}, {type: "number", message: "amount must be a number"}],
   }
 
   const validate = (formData) => {
@@ -30,6 +30,10 @@ export default function ExpenseForm({ setExpenses }) {
                 return true
             }
             if(rule.minLength && value.length < 3){
+                errorsData[key]= rule.message
+                return true
+            }
+            if (rule.type === "number" && isNaN(value)){
                 errorsData[key]= rule.message
                 return true
             }
