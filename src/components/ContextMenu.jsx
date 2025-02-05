@@ -1,9 +1,17 @@
 
-export default function ContextMenu() {
+export default function ContextMenu({menuPosition, setMenuPosition, setExpenses, rowId }) {
+
+  if(!menuPosition.left) return
+
   return (
-    <div className="context-menu">
-            <div>Edit</div>
-            <div>Delete</div>
+    <div className="context-menu" style={menuPosition}>
+            <div onClick={()=>{
+              setMenuPosition({})
+            }}>Edit</div>
+            <div onClick={()=>{
+              setExpenses((prevState)=> prevState.filter((expense) => expense.id != rowId))
+              setMenuPosition({})
+            }}>Delete</div>
         </div>
   );
 }
