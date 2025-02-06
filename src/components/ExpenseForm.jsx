@@ -2,15 +2,11 @@ import { useState } from "react";
 import Input from "./Input";
 import SelectInput from "./SelectInput";
 
-export default function ExpenseForm({ setExpenses }) {
+export default function ExpenseForm({ setExpenses, expense, setExpense, editingRowId,setEditingRowId }) {
   // const [title, setTitle]= useState('')
   // const [category, setCategory] = useState('')
   // const [amount , setAmount] = useState('')
-  const [expense, setExpense] = useState({
-    title: "",
-    category: "",
-    amount: "",
-  });
+
 
   const [errors, setErrors] = useState({});
 
@@ -46,6 +42,26 @@ export default function ExpenseForm({ setExpenses }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const validateResult = validate(expense);
+
+    if(editingRowId){
+      setExpenses((prevState) => 
+        prevState.map((value) =>{
+          if(value.id === editingRowId){
+            return {
+              ...expense, id: editingRowId
+            }
+          }
+          return value
+        })
+      )
+      setEditingRowId('')
+      setExpense({
+        title: "",
+        category: "",
+        amount: "",
+      });
+      return true
+    }
 
     if (Object.keys(validateResult).length) return;
     setExpenses((prevState) => [
@@ -98,7 +114,7 @@ export default function ExpenseForm({ setExpenses }) {
         onChange={handleChange}
         error={errors.amount}
       />
-      <button className="add-btn">Add</button>
+      <button className="add-btn">{editingRowId? 'Save' :'Add'}</button>
     </form>
   );
 }
